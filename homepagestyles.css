@@ -112,7 +112,7 @@ header p {
 }
 
 /* Custom Button Styling */
-.custom-btn {
+.custom-bn {
   display: inline-block;
   background: linear-gradient(135deg, #66ccff, #0077ff);
   color: #121212;
@@ -127,7 +127,7 @@ header p {
   text-align: center; /* Ensures text is centered */
 }
 
-.custom-btn:hover {
+.custom-bn:hover {
   background: #48a9d6;
   color: white;
   transform: scale(1.1); /* Slightly increase the button size on hover */
