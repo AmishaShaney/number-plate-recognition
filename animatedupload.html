@@ -72,64 +72,163 @@ Upload Files - Number Plate Recognition
         display: none;
     }
 
-    /* Loading animation */
-    .loading-container {
+    /* Loader */
+    .loader {
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: 1111;
+        overflow-x: hidden;
+        background: #3264f5;
+        background-image: linear-gradient(to right, #748c39 0%, #84ad21 51%, #748c39 100%);
         display: none;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        height: 100vh;
+        align-items: center;
     }
 
-    h1 {
-        font-family: 'Amatic SC', sans-serif;
-        font-size: 50px;
-        color: white;
-        opacity: 0.8;
-        animation: pulse 2s infinite;
-    }
-
-    #cooking {
+    .loader-inner {
         position: relative;
-        width: 200px;
-        height: 200px;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        text-align: center;
     }
 
-    .bubble {
+    #restLoader {
+        margin: 0 auto;
+        padding: 100px 0;
+        position: relative;
+        transform: scale(0.8);
+        width: 165px;
+        height: 100px;
+    }
+
+    #cook div {
         position: absolute;
-        border-radius: 50%;
-        box-shadow: 0 0 5px white;
+        left: 6px;
+        transform: rotate(10deg);
+        width: 20px;
+        height: 20px;
         opacity: 0;
-        animation: bubble 2s infinite ease-in-out;
+        background: #fff;
+        border-radius: 50%;
+        animation-name: cooking;
+        animation-duration: 2.5s;
+        transform-origin: 81px 0%;
+        animation-iteration-count: infinite;
+        animation-direction: normal;
     }
 
-    .bubble:nth-child(1) { left: 50px; width: 15px; height: 15px; background: #fff; animation-delay: 0s; }
-    .bubble:nth-child(2) { left: 70px; width: 10px; height: 10px; background: #ccc; animation-delay: 0.5s; }
-    .bubble:nth-child(3) { left: 90px; width: 8px; height: 8px; background: #aaa; animation-delay: 1s; }
-    .bubble:nth-child(4) { left: 110px; width: 12px; height: 12px; background: #ddd; animation-delay: 1.5s; }
-    .bubble:nth-child(5) { left: 130px; width: 9px; height: 9px; background: #eee; animation-delay: 2s; }
-
-    @keyframes bubble {
-        0% { transform: scale(0.5); opacity: 0; top: 50%; }
-        50% { opacity: 1; }
-        100% { transform: scale(1.5); opacity: 0; top: 20%; }
+    #cook div:nth-child(1) {
+        animation-delay: 0;
     }
 
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.7; }
+    #cook div:nth-child(2) {
+        animation-delay: 0.05s;
+    }
+
+    #cook div:nth-child(3) {
+        animation-delay: 0.10s;
+    }
+
+    #cook div:nth-child(4) {
+        animation-delay: 0.15s;
+    }
+
+    @keyframes cooking {
+        18% {
+            opacity: 0;
+        }
+        19% {
+            opacity: 1;
+            transform: rotate(10deg);
+        }
+        41% {
+            transform: rotate(105deg);
+        }
+        62% {
+            opacity: 1;
+            transform: rotate(222deg);
+        }
+        100% {
+            opacity: 0;
+            transform: rotate(222deg);
+        }
+    }
+
+    #panShadow {
+        background-color: #000;
+        position: absolute;
+        width: 130px;
+        height: 15px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-radius: 10px;
+        opacity: 0.4;
+        animation-name: shadowAction;
+        animation-duration: 2.5s;
+        transform-origin: 80% 0%;
+        animation-iteration-count: infinite;
+        animation-direction: normal;
+    }
+
+    @keyframes shadowAction {
+        0% {
+        }
+        15% {
+            width: 100px;
+        }
+        22% {
+            width: 130px;
+        }
+        55% {
+            opacity: 0.3;
+            width: 125px;
+        }
+        60% {
+            opacity: 0.5;
+            width: 110px;
+        }
+    }
+
+    #panMan {
+        top: 130px;
+        left: 0;
+        z-index: 1;
+        position: absolute;
+        animation-name: shake;
+        animation-duration: 2.5s;
+        transform-origin: 80% 0%;
+        animation-iteration-count: infinite;
+        animation-direction: normal;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: rotate(0deg) translateY(0);
+        }
+        15% {
+            transform: rotate(-25deg) translateX(-30px);
+        }
+        22% {
+            transform: rotate(12deg);
+        }
+        55% {
+            transform: translateY(0) rotate(0) translateX(0);
+        }
+        60% {
+            transform: translateY(15px);
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="main-container">
-    <!-- Upload Section (Centered) -->
+    <!-- Upload Section -->
     <div class="upload-section" id="upload-section">
         <div class="card-custom text-center">
             <i class="fas fa-video"></i>
@@ -144,37 +243,43 @@ Upload Files - Number Plate Recognition
     </div>
 
     <!-- Loading Animation -->
-    <div class="loading-container" id="loading-animation">
-        <h1>Fidu 29's Cooking in progress...</h1>
-        <div id="cooking"></div>
+    <div class="loader" id="loading-animation">
+        <div class="loader-inner">
+            <h1>Cooking in progress...</h1>
+            <div id="restLoader">
+                <svg version="1.1" id="panMan" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="279.116px" height="33.416px" viewBox="23.116 0 279.116 33.416" enable-background="new 23.116 0 279.116 33.416"
+                    xml:space="preserve">
+                    <g>
+                        <path fill="#000" d="M184.073,4.527L184.073,4.527L25.76,4.526v0.001c0,10.523,3.857,20.391,10.592,28.889h137.129
+                            C180.216,24.918,184.073,15.051,184.073,4.527z"/>
+                    </g>
+                    <path fill="#000" d="M192.324,26.681c0,0.92-0.746,1.666-1.667,1.666l0,0c-0.92,0-1.666-0.746-1.666-1.666V5.264
+                        c0-0.921,0.746-1.667,1.666-1.667l0,0c0.921,0,1.667,0.746,1.667,1.667V26.681z"/>
+                    <polygon fill="#000" points="264.407,25.64 190.324,21.138 190.324,10.805 264.407,6.305 "/>
+                    <rect x="263.407" y="6.305" fill="#000" width="28.333" height="19.334"/>
+                    <circle fill="#000" cx="292.602" cy="15.935" r="9.631"/>
+                    <path fill="#000" d="M186.5,3.598c0,0.92-0.746,1.667-1.667,1.667H24.782c-0.92,0-1.667-0.746-1.667-1.667l0,0
+                        c0-0.92,0.746-1.667,1.667-1.667h160.05C185.754,1.931,186.5,2.677,186.5,3.598L186.5,3.598z"/>
+                </svg>
+                <div id="panShadow"></div>
+                <div id="cook">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let cookingDiv = document.getElementById("cooking");
-        if (cookingDiv) {
-            for (let i = 0; i < 5; i++) {
-                let bubble = document.createElement("div");
-                bubble.className = "bubble";
-                cookingDiv.appendChild(bubble);
-            }
-        }
-    });
-
     function showLoading(event) {
         event.preventDefault(); // Prevent form from submitting immediately
-
-        // Hide the upload form
         document.getElementById('upload-section').style.display = 'none';
-
-        // Show the loading animation
         document.getElementById('loading-animation').style.display = 'flex';
-
-        // Wait 2 seconds, then submit the form
-        setTimeout(() => {
-            document.getElementById('upload-form').submit();
-        }, 2000);
+        setTimeout(() => { document.getElementById('upload-form').submit(); }, 2000);
     }
 </script>
 
