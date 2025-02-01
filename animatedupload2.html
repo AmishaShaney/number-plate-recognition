@@ -1,0 +1,288 @@
+{% extends "layout1.html" %}
+{% block title %} 
+Upload Files - Number Plate Recognition
+{% endblock %}
+
+{% block style %} 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+
+    body {
+        background-color: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .upload-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card-custom {
+        background-color: #1e1e1e;
+        padding: 40px;
+        border-radius: 15px;
+        width: 400px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-custom i {
+        font-size: 80px;
+        color: orange;
+        margin-bottom: 15px;
+    }
+
+    .upload-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-size: 18px;
+    }
+
+    .upload-btn:hover {
+        background-color: #0056b3;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    /* Loader */
+    .loader {
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: 1111;
+        overflow-x: hidden;
+        background: #000; /* Black background */
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader-inner {
+        position: relative;
+        text-align: center;
+    }
+
+    #restLoader {
+        position: relative;
+        width: 200px;
+        height: 150px;
+        margin: 0 auto;
+    }
+
+    /* Pan Animation */
+    #panMan {
+        position: absolute;
+        top: 50px; /* Adjusted to position the pan correctly */
+        left: 50%;
+        transform: translateX(-50%);
+        animation: shake 2.5s infinite ease-in-out;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: translateX(-50%) rotate(0deg);
+        }
+        15% {
+            transform: translateX(-50%) rotate(-25deg);
+        }
+        22% {
+            transform: translateX(-50%) rotate(12deg);
+        }
+        55% {
+            transform: translateX(-50%) rotate(0deg);
+        }
+        60% {
+            transform: translateX(-50%) translateY(10px);
+        }
+    }
+
+    /* Shadow Animation */
+    #panShadow {
+        background-color: rgba(255, 255, 255, 0.3); /* Light shadow */
+        position: absolute;
+        width: 130px;
+        height: 15px;
+        bottom: 10px; /* Adjusted to align with the pan */
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10px;
+        opacity: 0.4;
+        animation: shadowAction 2.5s infinite ease-in-out;
+    }
+
+    @keyframes shadowAction {
+        0% {
+            width: 100px;
+        }
+        15% {
+            width: 130px;
+        }
+        22% {
+            width: 130px;
+        }
+        55% {
+            opacity: 0.3;
+            width: 125px;
+        }
+        60% {
+            opacity: 0.5;
+            width: 110px;
+        }
+    }
+
+    /* Bubbles Animation */
+    #cook {
+        position: absolute;
+        top: 20px; /* Adjusted to position bubbles inside the pan */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 100%;
+    }
+
+    #cook div {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 20px;
+        opacity: 0;
+        background: #ffcc00; /* Bright yellow */
+        border-radius: 50%;
+        animation: cooking 2.5s infinite;
+    }
+
+    #cook div:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    #cook div:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    #cook div:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    #cook div:nth-child(4) {
+        animation-delay: 1.5s;
+    }
+
+    @keyframes cooking {
+        0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(0);
+        }
+        50% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-50px);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-100px);
+        }
+    }
+
+    /* Loading Text */
+    .loader-inner h1 {
+        position: absolute;
+        top: -120px; /* Adjusted to move the text higher */
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ffcc00; /* Bright yellow */
+        font-size: 40px;
+        white-space: nowrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <!-- Upload Section -->
+    <div class="upload-section" id="upload-section">
+        <div class="card-custom text-center">
+            <i class="fas fa-video"></i>
+            <h3>Upload Video</h3>
+            <form id="upload-form" method="POST" enctype="multipart/form-data" onsubmit="showLoading(event)">
+                {% csrf_token %}
+                <label for="video-upload">Drag and drop a video or click to upload</label>
+                <input type="file" id="video-upload" name="photo" accept="video/mp4, video/avi, video/mov">
+                <button type="submit" class="upload-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Animation -->
+    <div class="loader" id="loading-animation">
+        <div class="loader-inner">
+            <h1>Fidaa is Cooking...</h1>
+            <div id="restLoader">
+                <svg version="1.1" id="panMan" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="279.116px" height="33.416px" viewBox="23.116 0 279.116 33.416" enable-background="new 23.116 0 279.116 33.416"
+                    xml:space="preserve">
+                    <g>
+                        <path fill="#ffcc00" d="M184.073,4.527L184.073,4.527L25.76,4.526v0.001c0,10.523,3.857,20.391,10.592,28.889h137.129
+                            C180.216,24.918,184.073,15.051,184.073,4.527z"/>
+                    </g>
+                    <path fill="#ffcc00" d="M192.324,26.681c0,0.92-0.746,1.666-1.667,1.666l0,0c-0.92,0-1.666-0.746-1.666-1.666V5.264
+                        c0-0.921,0.746-1.667,1.666-1.667l0,0c0.921,0,1.667,0.746,1.667,1.667V26.681z"/>
+                    <polygon fill="#ffcc00" points="264.407,25.64 190.324,21.138 190.324,10.805 264.407,6.305 "/>
+                    <rect x="263.407" y="6.305" fill="#ffcc00" width="28.333" height="19.334"/>
+                    <circle fill="#ffcc00" cx="292.602" cy="15.935" r="9.631"/>
+                    <path fill="#ffcc00" d="M186.5,3.598c0,0.92-0.746,1.667-1.667,1.667H24.782c-0.92,0-1.667-0.746-1.667-1.667l0,0
+                        c0-0.92,0.746-1.667,1.667-1.667h160.05C185.754,1.931,186.5,2.677,186.5,3.598L186.5,3.598z"/>
+                </svg>
+                <div id="panShadow"></div>
+                <div id="cook">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLoading(event) {
+        event.preventDefault(); // Prevent form from submitting immediately
+        document.getElementById('upload-section').style.display = 'none';
+        document.getElementById('loading-animation').style.display = 'flex';
+        setTimeout(() => { document.getElementById('upload-form').submit(); }, 2000);
+    }
+</script>
+
+{% endblock %}
