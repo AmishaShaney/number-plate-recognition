@@ -22,7 +22,7 @@
             z-index: 1000;
             width: 300px;
             transition: top 4s ease-in-out;
-            color: rgb(241, 237, 237)
+            color: rgb(241, 237, 237);
         }
         .popup i {
             color: rgb(247, 243, 243);
@@ -36,6 +36,7 @@
             padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
         }
         .popup button:hover {
             background: #FD7D61;
@@ -71,7 +72,7 @@
     </div>
 
     <!-- Declined Message Container -->
-    <div class="message-container declined-container" onclick="showPopup()">
+    <div class="message-container declined-container">
         <i class="fas fa-times-circle"></i>
         <p>Declined</p>
     </div>
@@ -81,7 +82,8 @@
     <div class="popup" id="popup">
         <i class="fas fa-times-circle"></i>
         <p>Access Declined! Please register to continue.</p>
-        <button onclick="redirectToRegister()">Go to Register</button>
+        <button>Go to Register</button>
+        <button>Open</button>
     </div>
 
     <script>
@@ -97,12 +99,7 @@
                 }, 50); // Small delay for animation effect
             }, 1000); // 1-second delay before appearing
         };
-    
-        function redirectToRegister() {
-            window.location.href = "../register.html";
-        }
     </script>
-    
     
      <script src="gateclose.js" defer></script>
 </body>
