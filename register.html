@@ -5,8 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicle Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="register.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        /* General styles */
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: slideIn 0.8s ease-out forwards, glowEffect 2s infinite alternate;
+        }
+
+        /* Form Title */
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Input Fields */
+        .form-control, .form-select {
+            background: grey;
+            border: none;
+            color: black;
+            padding: 10px;
+            transition: 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Input Focus Effect */
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Button */
+        .btn-primary {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff4b2b, #ff416c);
+            transform: scale(1.05);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            color: #0f0;
+            font-weight: bold;
+            margin-top: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Left-side car image */
+        .car-left img {
+            width: 150px;
+            position: absolute;
+            left: 5%;
+            bottom: 10%;
+            animation: slideLeft 1.5s ease-out forwards;
+        }
+
+        /* Enlarged right-side car image */
+        .car-right img {
+            width: 650px;
+            position: absolute;
+            bottom: 25%;
+            right: 10%;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards, zoomEffect 4s infinite alternate;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideLeft {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomEffect {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes glowEffect {
+            from {
+                box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+            }
+            to {
+                box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -52,6 +200,37 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("registrationForm");
+            const successMessage = document.getElementById("successMessage");
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault(); // Prevent page reload
+
+                // Get form values
+                const ownerName = document.getElementById("ownerName").value;
+                const vehicleNumber = document.getElementById("vehicleNumber").value;
+                const residentAddress = document.getElementById("residentAddress").value;
+                const category = document.getElementById("category").value;
+
+                // Simple validation
+                if (!ownerName || !vehicleNumber || !residentAddress || !category) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                // Simulate successful submission
+                successMessage.style.display = "block";
+                form.reset();
+
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    successMessage.style.display = "none";
+                }, 3000);
+            });
+        });
+    </script>
+
 </body>
 </html>
